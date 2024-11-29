@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>用户列表</title>
+  <link rel="stylesheet" th:href="@{/static/css/user.css}" type="text/css"></link>
+</head>
+<body>
+  <div class="header">
+    <h1>用户列表</h1>
+  </div>
+  <div class="add-button-wrapper">
+    <a class="add-button" th:href="@{/toAdd}">新增用户</a>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>编号</th>
+        <th>用户名</th>
+        <th>性别</th>
+        <th>邮箱</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+	<tbody>
+      <tr th:each="user : ${users}">
+        <td th:text="${user.id}">1</td>
+        <td th:text="${user.name}">张三</td>
+        <td th:text="${user.gender==1?'男' : '女'}">男</td>
+        <td th:text="${user.email}">zhangsan@powernode.com</td>
+        <td>
+          <a th:href="@{'/user/' + ${user.id}}">修改</a>
+          <!--为删除提供一个鼠标单击事件-->
+          <a th:href="@{'/user/' + ${user.id}}" onclick="del(event)">删除</a>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div style="display: none">
+    <form id="delForm" method="post">
+      <input type="hidden" name="_method" value="DELETE"/>
+    </form>
+  </div>
+
+</body>
+<script>
+  function del(event){
+    // 获取表单
+    let delForm = document.getElementById("delForm");
+    // 设置表单action
+    delForm.action = event.target.href;
+    if(window.confirm("您确定要删除吗？")){
+      // 提交表单
+      if (delForm && delForm.tagName === 'FORM') {
+        // 提交表单
+        delForm.submit();
+      } else {
+        console.log("未找到有效的表单元素或获取到的元素不是表单");
+      }
+    }
+    // 阻止超链接默认行为
+    event.preventDefault();
+  }
+</script>
+</html>
