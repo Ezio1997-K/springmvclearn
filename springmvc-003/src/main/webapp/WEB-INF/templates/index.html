@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<h1>这是首页</h1>
+</hr>
+<a th:href="@{/test/110}">根据id查询用户信息</a></br>
+<form th:action="@{/user}" method="post">
+    <input type="hidden" name="_method" value="PUT">
+    用户名:<input type="text" name="name"/><br>
+    年龄:<input type="text" name="age"/><br>
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>
