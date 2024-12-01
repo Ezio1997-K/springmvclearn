@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script th:src="@{/static/js/vue3.4.21.js}"></script>
+    <script th:src="@{/static/js/axios.min.js}"></script>
+</head>
+<body>
+<h1>首页</h1>
+<hr>
+
+<div id="app">
+    <h1>{{message}}</h1>
+    <button @click="getMessage">获取消息</button>
+</div>
+<div id="app2">
+    <h3>{{msg}}</h3>
+    <button @click="getMsg">获取消息1</button>
+</div>
+<script th:inline="javascript">
+    Vue.createApp({
+        data() {
+            return {
+                message: "这里的信息将被刷新"
+            }
+        },
+        methods: {
+            async getMessage() {
+                try {
+                    const response = await axios.get([[@{/}]] + 'hello')
+                        this.message = response.data
+                }catch
+                    (e)
+                    {
+                        console.error(e)
+                    }
+                }
+            }
+        }).mount("#app")
+</script>
+<script th:inline="javascript">
+    let jsonObj = {'name':'张三','age':18}
+    Vue.createApp({
+        data() {
+            return {
+                msg: '这是一个消息'
+            }
+        },
+        methods: {
+            async getMsg() {
+                try {
+                    const response = await axios.post([[@{/}]] + 'sayHello',JSON.stringify(jsonObj),{
+                    headers:{
+                    'Content-Type':'application/json; charset=UTF-8'
+                    }
+                })
+                        this.msg = response.data;
+                }catch
+                    (e)
+                    {
+                        console.error(e)
+                    }
+                }
+            }
+        }).mount("#app2")
+</script>
+
+</body>
+</html>
