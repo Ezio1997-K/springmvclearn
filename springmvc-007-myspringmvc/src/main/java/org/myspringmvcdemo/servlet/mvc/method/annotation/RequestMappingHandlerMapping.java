@@ -1,5 +1,7 @@
 package org.myspringmvcdemo.servlet.mvc.method.annotation;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.myspringmvcdemo.web.servlet.HandlerExecutionChain;
 import org.myspringmvcdemo.web.servlet.HandlerMapping;
 
 /**
@@ -9,4 +11,9 @@ import org.myspringmvcdemo.web.servlet.HandlerMapping;
  *
  */
 public class RequestMappingHandlerMapping implements HandlerMapping {
+    @Override
+    public HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+
+        return null;
+    }
 }
