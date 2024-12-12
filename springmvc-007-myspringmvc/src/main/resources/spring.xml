@@ -6,7 +6,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
     <interceptors>
-        <bean name="com.usemymvc.interceptors.Interceptors1"/>
-        <bean name="com.usemymvc.interceptors.Interceptors2"/>
+        <bean class="com.usemymvc.interceptors.Interceptor1"/>
+        <bean class="com.usemymvc.interceptors.Interceptor2"/>
     </interceptors>
 </beans>

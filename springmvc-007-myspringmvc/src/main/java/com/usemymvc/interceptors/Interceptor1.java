@@ -11,7 +11,7 @@ import org.myspringmvcdemo.web.servlet.ModelAndView;
  * Description:
  *
  */
-public class Interceptors1 implements HandlerInterceptor {
+public class Interceptor1 implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("拦截器1preHandle执行");
