@@ -4,13 +4,17 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.myspringmvcdemo.stereotype.Controller;
+import org.myspringmvcdemo.web.bind.annotation.RequestMapping;
 import org.myspringmvcdemo.web.constant.Const;
+import org.myspringmvcdemo.web.method.HandlerMethod;
 import org.myspringmvcdemo.web.servlet.HandlerAdapter;
 import org.myspringmvcdemo.web.servlet.HandlerInterceptor;
 import org.myspringmvcdemo.web.servlet.HandlerMapping;
+import org.myspringmvcdemo.web.servlet.mvc.RequestMappingInfo;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -33,7 +37,7 @@ public class ApplicationContext {
             Document document = reader.read(new File(xmlPath));
             //组件扫描
             Element componentScanElement = (Element) document.selectSingleNode("/beans/component-scan");
-            componentScan(componentScanElement);
+            Map<RequestMappingInfo, HandlerMethod> map = componentScan(componentScanElement);
             System.out.println("beanMap:" + beanMap);
             //创建视图解析器
             Element beanElement = (Element) document.selectSingleNode("/beans/bean");
@@ -42,7 +46,7 @@ public class ApplicationContext {
             Element interceptorsElement = (Element) document.selectSingleNode("/beans/interceptors");
             createInterceptors(interceptorsElement);
             //创建HandlerMapping接口 HandlerAdaptor接口对应的实现类
-            createHandlerMappingAdaptor(Const.BASE_PACKAGE_HANDLER);
+            createHandlerMappingAdaptor(Const.BASE_PACKAGE_HANDLER,map);
             System.out.println("beanMap:" + beanMap);
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,7 +54,7 @@ public class ApplicationContext {
 
     }
 
-    private void createHandlerMappingAdaptor(String basePackageHandler) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    private void createHandlerMappingAdaptor(String basePackageHandler,Map<RequestMappingInfo,HandlerMethod> map) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         String packagePath = basePackageHandler.replace(".", "/");
         System.out.println(packagePath);
         File file = new File(URLDecoder.decode(Thread.currentThread().getContextClassLoader().getResource(packagePath).getPath(), Charset.forName("UTF-8")));
@@ -61,7 +65,7 @@ public class ApplicationContext {
                 Class<?> clazz = Class.forName(className);
                 //实现了接口才创建对象
                 if (HandlerMapping.class.isAssignableFrom(clazz)) {
-                    Object object = clazz.getDeclaredConstructor().newInstance();
+                    Object object = clazz.getDeclaredConstructor(Map.class).newInstance(map);
                     beanMap.put(Const.HANDLER_MAPPING,object);
                 }else if(HandlerAdapter.class.isAssignableFrom(clazz)){
                     Object object = clazz.getDeclaredConstructor().newInstance();
@@ -102,7 +106,9 @@ public class ApplicationContext {
         return "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
     }
 
-    private void componentScan(Element componentScanElement) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    private Map<RequestMappingInfo,HandlerMethod> componentScan(Element componentScanElement) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        //创建处理器映射器大Map
+        Map<RequestMappingInfo,HandlerMethod> map = new HashMap<>();
         String packageName = componentScanElement.attribute(Const.BASE_PACKAGE).getValue();
         String packagePath = packageName.replaceAll("\\.", "/");
         String realPath = Thread.currentThread().getContextClassLoader().getResource(packagePath).getPath();
@@ -120,9 +126,22 @@ public class ApplicationContext {
                 if (clazz.isAnnotationPresent(Controller.class)) {
                     Object beanObject = clazz.getDeclaredConstructor().newInstance();
                     beanMap.put(firstCharLowerCase(clazz.getSimpleName()), beanObject);
+                    //创建这个bean所有的HandlerMehod对象，并放到大Map中
+                    Method[] methods = clazz.getMethods();
+                    for (Method method : methods) {
+                        if (method.isAnnotationPresent(RequestMapping.class)) {
+                            RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+                            RequestMappingInfo requestMappingInfo = new RequestMappingInfo();
+                            requestMappingInfo.setRequestURI(requestMapping.value()[0]);
+                            requestMappingInfo.setMethod(requestMapping.requestMethod().name());
+                            HandlerMethod handlerMethod = new HandlerMethod(beanObject, method);
+                            map.put(requestMappingInfo, handlerMethod);
+                        }
+                    }
                 }
             }
         }
+        return map;
     }
 
     private String firstCharLowerCase(String simpleName) {
