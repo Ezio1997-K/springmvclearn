@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class RequestMappingHandlerMapping implements HandlerMapping {
     private Map<RequestMappingInfo, HandlerMethod> map;
-    public RequestMappingHandlerMapping(Map<RequestMappingInfo, HandlerMethod> map {
+    public RequestMappingHandlerMapping(Map<RequestMappingInfo, HandlerMethod> map) {
         this.map = map;
     }
     @Override
