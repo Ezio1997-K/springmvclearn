@@ -9,6 +9,7 @@ import org.myspringmvcdemo.web.constant.Const;
 import org.myspringmvcdemo.web.context.WebApplicationContext;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * ClassName: DispatcherServlet
@@ -52,11 +53,20 @@ public class DispatcherServlet extends HttpServlet {
             //1.根据请求获取对应的处理器执行链对象
             HandlerExecutionChain mappedHandler =  handlerMapping.getHandler(request);
             //2.根据处理器方法获取对应的处理器适配器对象
+            HandlerAdapter ha = this.handlerAdapter;
             //3.执行所有拦截器的preHandle()
+            if(!mappedHandler.applyPreHandler(request,response)){
+                return;
+            }
             //4.执行目标方法，返回视图对象
+            ModelAndView mv = ha.handle(request,response,mappedHandler.getHandler());
             //5.执行所有拦截器的postHandle()
+            mappedHandler.applyPostHandle(request,response,mv);
             //6.响应
+            View view = viewResolver.resolveViewName(mv.getView().toString(), Locale.CHINA);
+            view.render(mv.getModel(),request,response);
             //7.执行所有拦截器的afterCompletion()
+            mappedHandler.triggerAfterCompleton(request,response,null);
         } catch (Exception e) {
             e.printStackTrace();
         }

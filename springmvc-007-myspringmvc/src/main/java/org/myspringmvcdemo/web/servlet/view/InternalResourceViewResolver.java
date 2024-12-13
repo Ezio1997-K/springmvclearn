@@ -9,7 +9,6 @@ import java.util.Locale;
  * ClassName: InternalResourceViewResolver
  * Package: org.myspringmvcdemo.web.servlet.view
  * Description:
- *
  */
 public class InternalResourceViewResolver implements ViewResolver {
     private String prefix;
@@ -41,6 +40,6 @@ public class InternalResourceViewResolver implements ViewResolver {
 
     @Override
     public View resolveViewName(String viewName, Locale locale) throws Exception {
-        return null;
+        return new InternalResourceView("text/html;charset=UTF-8", prefix + viewName + suffix);
     }
 }

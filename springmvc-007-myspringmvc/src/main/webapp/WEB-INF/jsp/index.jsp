@@ -6,5 +6,7 @@
 </head>
 <body>
 <h1>这是首页。</h1>
+<h3>${user}</h3></br>
+<a href="/oc/detail">order</a>
 </body>
 </html>

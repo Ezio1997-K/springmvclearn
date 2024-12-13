@@ -8,10 +8,10 @@ import java.util.LinkedHashMap;
  * Description:
  *
  */
-public class ModelMap extends LinkedHashMap<Object,String> {
+public class ModelMap<K,V> extends LinkedHashMap<K,V> {
     public ModelMap(){}
-    public ModelMap addAttribute(String name, Object value){
-        put(name,value.toString());
+    public ModelMap addAttribute(K name, V value){
+        put(name,(V) value.toString());
         return this;
     }
 }

@@ -10,27 +10,30 @@ import org.myspringmvcdemo.ui.ModelMap;
  */
 public class ModelAndView {
     private Object view;
-    private ModelMap modelMap;
+    private ModelMap model;
 
     public Object getView() {
         return view;
     }
+    public void setViewName(String name){
+        setView(name);
+    }
 
-    public void setView(Object view) {
+    private void setView(Object view) {
         this.view = view;
     }
 
-    public ModelMap getModelMap() {
-        return modelMap;
+    public ModelMap getModel() {
+        return model;
     }
 
     public void setModelMap(ModelMap modelMap) {
-        this.modelMap = modelMap;
+        this.model = modelMap;
     }
 
     public ModelAndView(Object view, ModelMap modelMap) {
         this.view = view;
-        this.modelMap = modelMap;
+        this.model = modelMap;
     }
 
     public ModelAndView() {

@@ -14,17 +14,17 @@ import org.myspringmvcdemo.web.servlet.ModelAndView;
 public class Interceptor1 implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("拦截器1preHandle执行");
+        System.out.println("拦截器1 preHandle 执行");
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        System.out.println("拦截器1postHandle执行");
+        System.out.println("拦截器1 postHandle 执行");
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        System.out.println("拦截器1afterCompletion执行");
+        System.out.println("拦截器1 afterCompletion 执行");
     }
 }
