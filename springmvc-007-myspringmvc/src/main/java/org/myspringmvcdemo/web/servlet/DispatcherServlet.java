@@ -59,6 +59,7 @@ public class DispatcherServlet extends HttpServlet {
                 return;
             }
             //4.执行目标方法，返回视图对象
+            //方法内部给视图对象赋值
             ModelAndView mv = ha.handle(request,response,mappedHandler.getHandler());
             //5.执行所有拦截器的postHandle()
             mappedHandler.applyPostHandle(request,response,mv);

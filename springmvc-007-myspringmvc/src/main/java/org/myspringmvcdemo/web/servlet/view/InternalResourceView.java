@@ -44,8 +44,11 @@ public class InternalResourceView implements View {
 
     @Override
     public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //设置响应类型
         response.setContentType(contentType);
+        //将模型数据保存到request域中
         model.forEach((BiConsumer<String, Object>) request::setAttribute);
+        //请求转发
         request.getRequestDispatcher(path).forward(request, response);
     }
 }

@@ -40,6 +40,7 @@ public class InternalResourceViewResolver implements ViewResolver {
 
     @Override
     public View resolveViewName(String viewName, Locale locale) throws Exception {
+        //根据视图名称解析视图对象，将视图名称拼接为实际的视图路径，并创建InternalResourceView对象，返回。
         return new InternalResourceView("text/html;charset=UTF-8", prefix + viewName + suffix);
     }
 }

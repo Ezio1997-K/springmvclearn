@@ -65,6 +65,7 @@ public class ApplicationContext {
                 Class<?> clazz = Class.forName(className);
                 //实现了接口才创建对象
                 if (HandlerMapping.class.isAssignableFrom(clazz)) {
+                    //给RequestMappingHandler对象注入map
                     Object object = clazz.getDeclaredConstructor(Map.class).newInstance(map);
                     beanMap.put(Const.HANDLER_MAPPING,object);
                 }else if(HandlerAdapter.class.isAssignableFrom(clazz)){
